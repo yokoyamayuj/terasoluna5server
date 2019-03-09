@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -13,10 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FileUploadController {
 
-	@ModelAttribute
-	public FileUploadForm setFileUploadForm() {
-		return new FileUploadForm();
-	}
+//	@ModelAttribute
+//	public FileUploadForm setFileUploadForm() {
+//		return new FileUploadForm();
+//	}
 
 	@RequestMapping(value = "welcome/upload", method = RequestMethod.GET)
 	public String uploadForm() {
@@ -24,17 +25,25 @@ public class FileUploadController {
 	}
 
 	// (3)
+//	@RequestMapping(value = "welcome/upload", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String upload(FileUploadForm form) {
+//
+//		MultipartFile uploadFile = form.getFile();
+//
+//		String fileName = uploadFile.getOriginalFilename();
+//		long size = uploadFile.getSize();
+//		System.out.println(fileName+size);
+////		return "welcome/upload";
+//
+//		return "sucsess:" + fileName + "  size:" + size;
+//	}
+	
 	@RequestMapping(value = "welcome/upload", method = RequestMethod.POST)
 	@ResponseBody
-	public String upload(FileUploadForm form) {
+	public String upload(@RequestParam("upload_file") MultipartFile multipartFile) {
+	    String file_name =  multipartFile.getOriginalFilename();
 
-		MultipartFile uploadFile = form.getFile();
-
-		String fileName = uploadFile.getOriginalFilename();
-		long size = uploadFile.getSize();
-		System.out.println(fileName+size);
-//		return "welcome/upload";
-
-		return "sucsess:" + fileName + "  size:" + size;
+	    return file_name;
 	}
 }

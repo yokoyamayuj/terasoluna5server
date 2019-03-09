@@ -6,7 +6,18 @@
 function file_upload()
 {
     // フォームデータを取得
-    var formdata = new FormData($("#file_upload").get(0));
+    var formdata = new FormData();
+    
+    var formdata = new FormData();
+    var file = $("#bb").prop("files")[0];
+
+    // トークン設定
+    var csrfToken = $("meta[name='_csrf']").attr("content");
+    var csrfHeaderName = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(event, xhr, options) {
+        xhr.setRequestHeader(csrfHeaderName, csrfToken);
+    });
+    formdata.append("upload_file", file);
 
     // POSTでアップロード
     $.ajax({
@@ -16,7 +27,8 @@ function file_upload()
         cache       : false,
         contentType : false,
         processData : false,
-        dataType    : "html"
+        dataType    : "html",
+       
     })
     .done(function(data, textStatus, jqXHR){
         alert(data);
@@ -26,22 +38,29 @@ function file_upload()
     });
 }
 </script>
+ <sec:csrfMetaTags />
+
 <div id="wrapper">
     <h1 id="title">upload world!</h1>
-    <form:form
-  action="${pageContext.request.contextPath}/welcome/upload" method="post"
-  modelAttribute="fileUploadForm" enctype="multipart/form-data" id="file_upload"> 
+     
   <table>
     <tr>
       <th width="35%">File to upload</th>
       <td width="65%">
-        <form:input type="file" path="file" /> 
+        <input type="file"  id="aa"/> 
       </td>
+     </tr>
+     <tr>    
+      <th width="35%">File to upload</th>
+      <td width="65%">
+        <input type="file"  id="bb"/> 
+      </td>
+      
     </tr>
     <tr>
       <td>&nbsp;</td>
     </tr>
   </table>
   <button type="button" onclick="file_upload()">アップロード</button>
-  </form:form>
+  
 </div>
