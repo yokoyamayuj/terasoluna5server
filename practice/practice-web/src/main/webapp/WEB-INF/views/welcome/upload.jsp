@@ -3,13 +3,14 @@
 
 <script type="text/javascript">
 
+
 function file_upload()
 {
     // フォームデータを取得
     var formdata = new FormData();
     
     var formdata = new FormData();
-    var file = $("#bb").prop("files")[0];
+    var file = $("#file2").prop("files")[0];
 
     // トークン設定
     var csrfToken = $("meta[name='_csrf']").attr("content");
@@ -21,6 +22,18 @@ function file_upload()
 
     // POSTでアップロード
     $.ajax({
+    	async: true,
+        xhr : function(){	
+              XHR = $.ajaxSettings.xhr();
+              if(XHR.upload){
+        		XHR.upload.addEventListener('progress',function(e){
+                    progre = parseInt(e.loaded/e.total*10000)/100 ;
+					console.log(progre+"%") ;
+					$("#progress_2").attr("value",progre);
+                    }, false); 
+       			}
+				return XHR;
+       		 },
         url  : "./upload",
         type : "POST",
         data : formdata,
@@ -45,17 +58,22 @@ function file_upload()
      
   <table>
     <tr>
-      <th width="35%">File to upload</th>
-      <td width="65%">
-        <input type="file"  id="aa"/> 
+      <th width="25%">File to upload</th>
+      <td width="40%">
+        <input type="file"  id="file1"/> 
+      </td>
+      <td width="35%">
+    	<progress id="progress_1" value="0" max="100"></progress>
       </td>
      </tr>
      <tr>    
-      <th width="35%">File to upload</th>
-      <td width="65%">
-        <input type="file"  id="bb"/> 
+      <th width="25%">File to upload</th>
+      <td width="40%">
+        <input type="file"  id="file2"/> 
       </td>
-      
+       <td width="35%">
+    	<progress id="progress_2" value="0" max="100"></progress>
+      </td>    
     </tr>
     <tr>
       <td>&nbsp;</td>
