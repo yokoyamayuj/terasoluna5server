@@ -1,8 +1,41 @@
 <script src="${pageContext.request.contextPath}/resources/app/js/jquery-3.3.1.min.js"></script>
-
-
 <script type="text/javascript">
 
+
+
+function async(num,d){
+	setTimeout(
+			(function(num) { 
+				return function() {
+					console.log(num);
+					d.resolve();
+				};
+		     })(num), 1000);
+}
+
+
+function defferd(){
+
+	var promise = $.Deferred().resolve().promise();
+	
+	for (var i = 0; i < 5; i++) {
+	  promise = promise.then(
+			 // promiseのthen. returnで promiseを返すnum引数をとるfunctionを返す.
+			  (function(num){
+			 		return function() {
+							// async処理
+							var d = $.Deferred();
+	    					async(num,d);
+	    					return d.promise();
+
+	  				};
+	  				// returnされたmethodにnum引数を渡してcall.
+	  			})(i)
+	  		// promise.then
+	  		);
+	// for 
+	}
+};
 
 function file_upload()
 {
@@ -55,6 +88,7 @@ function file_upload()
 
 <div id="wrapper">
     <h1 id="title">upload world!</h1>
+       <button type="button" onclick="defferd()">defferd</button>
      
   <table>
     <tr>
